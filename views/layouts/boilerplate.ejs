@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YELPCAMP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500&display=swap');
+    body{
+        margin: 0;
+        padding: 0;
+        background-color: aliceblue;
+        font-family: 'Roboto Slab', serif;
+    }
+    .mynavbar a{
+        color: black;
+        text-decoration: none;
+    }
+
+    nav{
+        padding: 16px;
+        background-color: rgb(138 205 181);
+    }
+
+    .mynavbar{
+        display: flex;
+        list-style: none;
+        padding-left: 16px;
+        margin: auto;
+        position: relative;
+    }
+
+    .mynavbar li{
+        margin: 5px 8px;
+    }
+
+    .right-menu{
+        position: absolute;
+        right: 16px;
+        display: flex;
+    }
+
+    .icon{
+        color: black;
+        font-size: 22px;
+        display: none;
+    }
+
+    .heading{
+        text-transform: capitalize;
+        text-align: center;
+        margin-top: -15px;
+    }
+
+    .form-style{
+        background-color: rgb(188, 221, 223);
+        padding: 30px;
+        margin: 30px auto;
+        border-radius: 15px;
+    }
+
+    @media (max-width:520px) {
+        .mynavbar{
+            display: none;
+            flex-direction: column;
+        }
+
+        .icon{
+            display: unset;
+        }
+
+        .right-menu{
+            flex-direction: column;
+            text-align: right;
+        }
+    }
+</style>
+<body class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
+    <div>
+        <nav>
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                <i class="fa fa-bars"></i>
+            </a>
+            <ul class="mynavbar">
+                <a href="/"><li>Home</li></a>
+                <a href="/campground/all"><li>Campgrounds</li></a>
+                <a href="/campground/new"><li>Add Campground</li></a>
+                <div class="right-menu">
+                    <% if (currentUser) { %>
+                        <a href="/logout"><li>Logout</li></a>
+                    <% }else { %>
+                        <a href="/register"><li>Register</li></a>
+                        <a href="/login"><li>Login</li></a>
+                    <% } %>
+                </div>
+            </ul>
+        </nav>
+        <div class="<%= (success && success.length) || (error && error.length) ? 'mt-3' : 'mt-5'%> container px-4" id="body">
+            <% if(success && success.length){ %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <%= success %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="setMargin()"></button>
+                </div>
+            <% } %> 
+            <% if(error && error.length){ %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <%= error %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="setMargin()"></button>
+                </div>
+            <% } %> 
+            <%- body %>
+        </div>
+    </div>
+    <footer class="footer bg-dark py-3">
+        <div class="container">
+            <span class="text-muted">&copy; Yelpcamp 2022</span>
+        </div>
+    </footer>
+<script>
+    const body = document.getElementById('body')
+    const setMargin = () => {
+        body.classList.replace('mt-3','mt-5')
+    }
+
+    (() => {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.validated-form')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+
+    function myFunction() {
+        var x = document.querySelector('.mynavbar');
+        if (x.style.display === "flex") {
+          x.style.display = "none";
+        } else {
+          x.style.display = "flex";
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+</body>
+</html>

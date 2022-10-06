@@ -1,0 +1,106 @@
+<% layout('layouts/boilerplate.ejs') %>
+<link rel="stylesheet" href="/css/stars.css">
+<style>
+    p{
+        margin-block-start: 8px;
+        margin-block-end: 8px;
+    }
+</style>
+<div class="row m-4">
+    <div class="col-lg-6 px-3 col-md-12 mb-4 ">
+        <div class="card">
+            <!-- <img src="<%= campground.images[0] %>" class="card-img-top" alt="..." width="500px" height="330px"> -->
+            <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" data-bs-interval="2500">
+                        <img src="<%= campground.images[0] %>" class="d-block w-100 card-img-top" alt="..." width="500px" height="330px">
+                    </div>
+                    <% campground.images.slice(1).forEach(image => { %>
+                      <div class="carousel-item" data-bs-interval="2500">
+                        <img src="<%= image %>" class="d-block w-100 card-img-top" alt="..." width="500px" height="330px">
+                      </div>
+                    <% }) %>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title"><%= campground.name %></h5>
+              <p class="card-text"><%= campground.description %></p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">&#8377;<%= campground.price %>/night</li>
+              <li class="list-group-item text-muted"><%= campground.location %></li>
+              <li class="list-group-item">Created By: <%= campground.owner.username %></li>
+            </ul>
+            <% if (currentUser) { %>
+                <div class="card-body">
+                    <% if (campground.owner.equals(currentUser)) { %>
+                        <a href="/campground/<%= campground._id %>/update" class="mx-2 btn btn-info">Update</a>
+                        <form class="d-inline mx-2" action="/campground/<%= campground._id %>/delete?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    <% } %>
+                    <a href="/campground/<%= campground._id %>/add_img" class="mx-2 btn btn-info">Add Images</a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-md-12 px-3">
+        <% if (currentUser) { %>
+            <h2 class="mb-3">Leave a Review</h2>
+            <form action="/campground/<%= campground._id %>/review/add" method="post" class="validated-form mb-4" novalidate>
+                <label for="rating" class="form-label">Rating: </label>
+                <fieldset class="starability-coinFlip">
+                    <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+                    <input type="radio" id="first-rate1" name="rating" value="1" />
+                    <label for="first-rate1" title="Terrible">1 star</label>
+                    <input type="radio" id="first-rate2" name="rating" value="2" />
+                    <label for="first-rate2" title="Not good">2 stars</label>
+                    <input type="radio" id="first-rate3" name="rating" value="3" />
+                    <label for="first-rate3" title="Average">3 stars</label>
+                    <input type="radio" id="first-rate4" name="rating" value="4" />
+                    <label for="first-rate4" title="Very good">4 stars</label>
+                    <input type="radio" id="first-rate5" name="rating" value="5" />
+                    <label for="first-rate5" title="Amazing">5 stars</label>
+                  </fieldset>
+                <div class="mb-3">
+                    <label for="body" class="form-label">Review: </label>
+                    <textarea name="body" id="body" cols="30" rows="3" class="form-control"></textarea>
+                </div>
+                <button class="btn btn-success">Add Review</button>
+            </form>
+        <% }else{ %>
+            <h4 class="text-center">Login to add Reviews</h4>
+        <% } %> 
+        <div class="my-4">
+            <% campground.reviews.forEach(review => { %>
+                <div class="card mb-3">
+                    <div class="card-body d-flex flex-row justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-2">
+                                <p class="starability-result fs-sm" data-rating="<%= review.rating %>">
+                                    Rated: 3 stars
+                                </p>
+                            </h6>
+                            <p class="card-subtitle text-muted mb-1">By <%= review.author.username %></p>
+                            <p class="card-text"><%= review.body %> </p>
+                        </div>
+                        <% if (currentUser && review.author.equals(currentUser._id)) { %>
+                            <form action="/campground/<%= campground._id%>/review/<%= review._id %>?_method=DELETE" method="POST">
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        <% } %>
+                    </div>             
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</div>

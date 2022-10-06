@@ -1,0 +1,23 @@
+<% layout('layouts/boilerplate.ejs') %>
+<h1 class="text-center my-4">All Campgrounds</h1>
+<div>
+    <% campgrounds.forEach(campground => { %>
+            <div class="card mb-3">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="<%= campground.images[0] %>" class="img-fluid rounded-start w-100" style="max-height: 300px;" alt="..." >
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= campground.name %></h5>
+                      <p class="card-text"><%= campground.description %></p>
+                      <p class="card-text text-muted"><%= campground.location %></p>
+                      <p class="card-text">&#8377;<%= campground.price %>/night</p>
+                      <a class="btn btn-primary" href="/campground/<%= campground._id %>">View <%= campground.name %></a>
+                      <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
+                    </div>
+                  </div>
+                </div>
+            </div>
+    <% }) %>
+</div>
